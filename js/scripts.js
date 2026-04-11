@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (window.scrollY > 50) {
             navbar.classList.add('scrolled');
             if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/')) {
-                navbar.classList.add('bg-dark-blue');
+                navbar.classList.add('bg-primary');
             }
         }
 
@@ -24,13 +24,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (window.scrollY > 50) {
                 navbar.classList.add('scrolled');
                 if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/')) {
-                    navbar.classList.add('bg-dark-blue');
+                    navbar.classList.add('bg-primary');
                 }
             } else {
                 navbar.classList.remove('scrolled');
-                // Only remove bg-dark-blue if we're on the home page, contact page should always have it
+                // Only remove if we're on the home page, contact page always has it
                 if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/')) {
-                    navbar.classList.remove('bg-dark-blue');
+                    navbar.classList.remove('bg-primary');
                 }
             }
         });
@@ -82,21 +82,54 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
             btn.disabled = true;
             
-            // Mock API call
-            setTimeout(() => {
-                btn.innerHTML = '<i class="bi bi-check-circle me-2"></i> Message Sent!';
-                btn.classList.remove('btn-gold');
-                btn.classList.add('btn-success', 'text-white');
-                this.reset();
+            // EmailJS Integration
+            const templateParams = {
+                name: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                message: document.getElementById('message').value
+            };
+
+            emailjs.send('service_u0vyt8o', 'template_p6y2d6c', templateParams)
+            .then(function() {
+                // Restore Button State
+                btn.innerHTML = originalText;
+                btn.disabled = false;
                 
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.classList.add('btn-gold');
-                    btn.classList.remove('btn-success', 'text-white');
-                    btn.disabled = false;
-                    if(charCountDisplay) charCountDisplay.textContent = '0 / 180';
-                }, 3000);
-            }, 1500);
+                // Show Stylish Popup
+                Swal.fire({
+                    title: 'Message Sent Successfully!',
+                    text: 'Thank you for reaching out. A professional from our team will get back to you shortly.',
+                    icon: 'success',
+                    iconColor: '#3DB54A', // Green Accent
+                    confirmButtonColor: '#F47A20', // Orange Accent
+                    confirmButtonText: 'Great!',
+                    background: '#ffffff',
+                    color: '#1F5A7A', // Primary Deep Blue
+                    customClass: {
+                        popup: 'shadow-lg border-0',
+                        title: 'brand-font'
+                    }
+                });
+
+                document.getElementById('contactForm').reset();
+                if(charCountDisplay) charCountDisplay.textContent = '0 / 180';
+                
+            }, function(error) {
+                console.error('FAILED...', error);
+                
+                // Restore Button State
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                Swal.fire({
+                    title: 'Oops!',
+                    text: 'Something went wrong and we couldn\'t send your message. Please try again later.',
+                    icon: 'error',
+                    confirmButtonColor: '#1F5A7A',
+                    confirmButtonText: 'Close'
+                });
+            });
         });
     }
 });
