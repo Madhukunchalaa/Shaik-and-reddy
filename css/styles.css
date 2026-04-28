@@ -164,6 +164,9 @@ h1, h2, h3, h4, h5, h6, .brand-font {
   margin-bottom: 40px;
   opacity: 0.9;
 }
+@media (min-width: 992px) {
+  .hero-content .btn { width: auto !important; }
+}
 
 /* Value Props Grid */
 .value-prop-card {
@@ -544,10 +547,9 @@ h1, h2, h3, h4, h5, h6, .brand-font {
   .section-title::after { width: 50px; }
   
   /* Hero & Buttons */
-  .hero-content .btn { width: 100%; margin-bottom: 10px; }
-  .hero-section { background-position: left center; }
+  .hero-section { background-position: center right; padding-top: 120px; padding-bottom: 80px; }
   .hero-section::before {
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 60%, rgba(255, 255, 255, 0.2) 100%);
+    background: rgba(255, 255, 255, 0.92); /* Solid transparent overlay for perfect mobile readability */
   }
   
   /* About Image Wrapper */
